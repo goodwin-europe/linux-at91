@@ -30,7 +30,7 @@
 #include <linux/platform_data/at91_adc.h>
 
 #include <mach/hardware.h>
-#include <video/atmel_lcdc.h>
+#include <video/atmel_lcdfb.h>
 #include <media/soc_camera.h>
 #include <media/atmel-isi.h>
 

@@ -19,7 +19,7 @@
 #include <linux/input.h>
 #include <linux/gpio_keys.h>
 
-#include <video/atmel_lcdc.h>
+#include <video/atmel_lcdfb.h>
 
 #include <asm/setup.h>
 #include <asm/mach-types.h>
