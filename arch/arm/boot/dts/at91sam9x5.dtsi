@@ -21,6 +21,7 @@
 		serial1 = &usart0;
 		serial2 = &usart1;
 		serial3 = &usart2;
+		serial4 = &usart3;
 		gpio0 = &pioA;
 		gpio1 = &pioB;
 		gpio2 = &pioC;
@@ -500,6 +501,15 @@
 				interrupts = <7 4 5>;
 				pinctrl-names = "default";
 				pinctrl-0 = <&pinctrl_usart2>;
+				status = "disabled";
+			};
+
+			usart3: serial@f8028000 {
+				compatible = "atmel,at91sam9260-usart";
+				reg = <0xf8028000 0x200>;
+				interrupts = <8 4 5>;
+				pinctrl-names = "default";
+				pinctrl-0 = <&pinctrl_usart3>;
 				status = "disabled";
 			};
 
