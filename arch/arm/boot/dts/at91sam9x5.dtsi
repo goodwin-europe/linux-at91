@@ -21,6 +21,7 @@
 		serial1 = &usart0;
 		serial2 = &usart1;
 		serial3 = &usart2;
+		serial4 = &usart3;
 		gpio0 = &pioA;
 		gpio1 = &pioB;
 		gpio2 = &pioC;
@@ -213,6 +214,19 @@
 				dma-tx = <&dma1 0x100020c0>;
 				pinctrl-names = "default";
 				pinctrl-0 = <&pinctrl_usart2>;
+				status = "disabled";
+			};
+
+			usart3: serial@f8028000 {
+				compatible = "atmel,at91sam9x5-usart";
+				reg = <0xf8028000 0x200>;
+				interrupts = <8 4 5>;
+				atmel,use-dma-rx;
+				dma-rx = <&dma1 0x2000020f>;
+				atmel,use-dma-tx;
+				dma-tx = <&dma1 0x100020e0>;
+				pinctrl-names = "default";
+				pinctrl-0 = <&pinctrl_usart3>;
 				status = "disabled";
 			};
 
