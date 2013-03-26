@@ -287,6 +287,11 @@ config RTC_DRV_ISL1208
 	  This driver can also be built as a module. If so, the module
 	  will be called rtc-isl1208.
 
+config RTC_DRV_MCP79410
+	tristate "Microchip MCP79410 RTC"
+	help
+	  This enables support for Microchip MCP79410 RTC.
+
 config RTC_DRV_ISL12022
 	tristate "Intersil ISL12022"
 	help
