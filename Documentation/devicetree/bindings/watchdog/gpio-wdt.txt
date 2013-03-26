@@ -1,0 +1,22 @@
+* Generic GPIO-triggered watchdog
+
+This driver can be used for simple external chips that can be triggered by
+a GPIO pin. Currently support is limited to GPIO controllers that support
+non-sleeping operations.
+
+Required properties:
+- compatible: must be "generic,gpio-wdt".
+- gpios: gpio pin to use
+- ping-sec: how often to ping the watchdog before userspace watchdog daemon
+  is started,
+- timeout-sec: watchdog timeout that is reported to userspace.
+
+Example:
+
+max6369 {
+	compatible = "generic,gpio-wdt";
+	gpios = <&pioB 13 0>;
+	ping-sec = <5>;
+	timeout-sec = <60>;
+};
+
