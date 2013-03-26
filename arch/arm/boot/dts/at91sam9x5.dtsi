@@ -584,6 +584,10 @@
 							<2 24 0x2 0x0	/* PC24 periph B */
 							 2 25 0x2 0x0>;	/* PC25 periph B */
 					};
+
+					pinctrl_usart3_rts: usart3_rts-0 {
+						atmel,pins = <2 24 0x2 0x0>; /* PC24 periph B */
+					};
 				};
 
 				uart0 {
