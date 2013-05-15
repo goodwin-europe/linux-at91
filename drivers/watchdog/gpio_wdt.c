@@ -140,7 +140,7 @@ static struct watchdog_info gpio_wdt_info = {
 };
 
 
-static int __devinit gpio_wdt_probe(struct platform_device *pdev)
+static int gpio_wdt_probe(struct platform_device *pdev)
 {
 	struct device_node *np = pdev->dev.of_node;
 	struct gpio_wdt_data *data;
@@ -212,7 +212,7 @@ err:
 	return ret;
 }
 
-static int __devexit gpio_wdt_remove(struct platform_device *pdev)
+static int gpio_wdt_remove(struct platform_device *pdev)
 {
 	struct gpio_wdt_data *data = platform_get_drvdata(pdev);
 
@@ -225,7 +225,7 @@ static int __devexit gpio_wdt_remove(struct platform_device *pdev)
 
 static struct platform_driver gpio_wdt_driver = {
 	.probe = gpio_wdt_probe,
-	.remove = __devexit_p(gpio_wdt_remove),
+	.remove = gpio_wdt_remove,
 	.driver		= {
 		.name	= "gpio-wdt",
 		.owner	= THIS_MODULE,
