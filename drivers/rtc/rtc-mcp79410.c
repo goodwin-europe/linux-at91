@@ -276,7 +276,7 @@ static const struct i2c_device_id mcp79410_id[] = {
 MODULE_DEVICE_TABLE(i2c, mcp79410_id);
 
 #ifdef CONFIG_OF
-static const struct of_device_id mcp79410_of_match[] __devinitconst = {
+static const struct of_device_id mcp79410_of_match[] = {
 	{ .compatible = "microchip,mcp79410" },
 	{}
 };
