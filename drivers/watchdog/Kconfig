@@ -355,6 +355,14 @@ config MAX63XX_WATCHDOG
 	help
 	  Support for memory mapped max63{69,70,71,72,73,74} watchdog timer.
 
+config GPIO_WATCHDOG
+	tristate "Generic GPIO-triggered watchdog"
+	depends on OF_GPIO
+	select WATCHDOG_CORE
+	help
+	  Supports any watchdog connected over GPIO. Settings should be
+	  specified using devicetree.
+
 config IMX2_WDT
 	tristate "IMX2+ Watchdog"
 	depends on ARCH_MXC
