@@ -1,0 +1,182 @@
+/*
+ * at91sam9g20ek.dts - Device Tree file for Atmel at91sam9g20ek board
+ *
+ * Copyright (C) 2012 Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>
+ *
+ * Licensed under GPLv2.
+ */
+/dts-v1/;
+/include/ "at91sam9g20.dtsi"
+
+/ {
+	model = "Goodwin GT9.1";
+	compatible = "atmel,at91sam9g20ek", "atmel,at91sam9g20", "atmel,at91sam9";
+
+	chosen {
+		bootargs = "mem=64M console=ttyS0,115200 root=/dev/mtdblock5 rw rootfstype=ubifs";
+	};
+
+	memory {
+		reg = <0x20000000 0x4000000>;
+	};
+
+	clocks {
+		#address-cells = <1>;
+		#size-cells = <1>;
+		ranges;
+
+		main_clock: clock@0 {
+			compatible = "atmel,osc", "fixed-clock";
+			clock-frequency = <18432000>;
+		};
+	};
+
+	leds {
+		compatible = "gpio-leds";
+
+		pa9 {
+			label = "pa9";
+			gpios = <&pioA 9 0>;
+			linux,default-trigger = "heartbeat";
+		};
+
+		pb2 {
+			label = "pb2";
+			gpios = <&pioB 2 1>;
+		};
+
+		pa6 {
+			label = "pa6";
+			gpios = <&pioA 6 1>;
+		};
+	};
+
+	ahb {
+		apb {
+			dbgu: serial@fffff200 {
+				status = "okay";
+			};
+
+			usart0: serial@fffb0000 {
+				pinctrl-0 =
+					<&pinctrl_usart0
+					 &pinctrl_usart0_rts
+					 &pinctrl_usart0_cts
+					 &pinctrl_usart0_dtr_dsr
+					 &pinctrl_usart0_dcd
+					 &pinctrl_usart0_ri>;
+				status = "okay";
+			};
+
+			usart1: serial@fffb4000 {
+				status = "okay";
+				pinctrl-0 = <&pinctrl_usart1 &pinctrl_usart1_rts>;
+				linux,rs485-enabled-at-boot-time;
+				rs485-rts-delay = <0 0>;
+			};
+
+			usart2: serial@fffb8000 {
+				status = "okay";
+			};
+
+			usart3: serial@fffd0000 {
+				pinctrl-0 = <&pinctrl_usart3 &pinctrl_usart3_rts>;
+				linux,rs485-enabled-at-boot-time;
+				rs485-rts-delay = <0 0>;
+				status = "okay";
+			};
+
+			usart4: serial@fffd4000 {
+				status = "okay";
+			};
+
+			usart5: serial@fffd8000 {
+				status = "okay";
+			};
+
+			macb0: ethernet@fffc4000 {
+				phy-mode = "mii";
+				status = "okay";
+			};
+
+			usb1: gadget@fffa4000 {
+				atmel,vbus-gpio = <&pioC 5 0>;
+				status = "okay";
+			};
+
+
+			mmc0: mmc@fffa8000 {
+				status = "okay";
+				slot@1 {
+					reg = <1>;
+					bus-width = <4>;
+				};
+			};
+
+			adc0: adc@fffe0000 {
+				atmel,adc-channels-used = <0x1>;
+				atmel,adc-num-channels = <1>;
+				status = "okay";
+			};
+
+			spi0: spi@fffc8000 {
+				status = "okay";
+				mtd_dataflash@0 {
+					compatible = "atmel,at45", "atmel,dataflash";
+					spi-max-frequency = <50000000>;
+					reg = <1>;
+				};
+			};
+
+			i2c0: i2c@fffac000 {
+				status = "okay";
+
+				mcp79410: rtc@6f {
+					compatible = "microchip,mcp79410";
+					reg = <0x6f>;
+				};
+
+				sensor1: lm75@48 {
+					compatible = "lm75";
+					reg = <0x48>;
+				};
+			};
+
+			watchdog@fffffd40 {
+				status = "okay";
+			};
+
+			/* RTS on this board doesn't have external pull down */
+			pinctrl@fffff400 {
+				usart1 {
+					pinctrl_usart1_rts: usart1_rts-0 {
+						atmel,pins =
+							<1 28 0x1 0x8>;
+					};
+				};
+
+				usart3 {
+					pinctrl_usart3_rts: usart3_rts-0 {
+						atmel,pins =
+							<2 8 0x2 0x8>;
+					};
+				};
+			};
+
+
+		};
+
+		nand0: nand@40000000 {
+			nand-bus-width = <8>;
+			nand-ecc-mode = "soft";
+			nand-on-flash-bbt;
+			status = "okay";
+		};
+
+		usb0: ohci@00500000 {
+			num-ports = <2>;
+			status = "okay";
+		};
+	};
+
+};
