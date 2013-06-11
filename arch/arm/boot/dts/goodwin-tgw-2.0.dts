@@ -1,0 +1,37 @@
+/*
+ * goodwin-tgw-2.0.dts - Device Tree file for Goodwin TGW 2.0 board
+ *
+ *  Copyright (C) 2013 Goodwin,
+ *                2013 Alexander Morozov <linux@meltdown.ru>
+ *
+ * Licensed under GPLv2 or later.
+ */
+
+/dts-v1/;
+/include/ "goodwin-gw-9x25.dtsi"
+
+/ {
+	model = "Goodwin TGW 2.0";
+	compatible = "goodwin,tgw-2.0", "atmel,at91sam9x5", "atmel,at91sam9";
+
+	ahb {
+		apb {
+			/* external port */
+			usart0: serial@f801c000 {
+				status = "okay";
+			};
+
+			/* GSM AUX */
+			usart1: serial@f8020000 {
+				status = "okay";
+			};
+
+			/* AMBE codec */
+			usart3: serial@f8028000 {
+				pinctrl-0 = <&pinctrl_usart3 &pinctrl_usart3_cts>;
+				status = "okay";
+			};
+		};
+	};
+};
+
