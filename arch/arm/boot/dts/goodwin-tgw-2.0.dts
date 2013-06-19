@@ -16,11 +16,19 @@
 
 	ahb {
 		apb {
-			usart2: serial@f8024000 {
+			/* external port */
+			usart0: serial@f801c000 {
 				status = "okay";
 			};
 
+			/* GSM AUX */
+			usart1: serial@f8020000 {
+				status = "okay";
+			};
+
+			/* AMBE codec */
 			usart3: serial@f8028000 {
+				pinctrl-0 = <&pinctrl_usart3 &pinctrl_usart3_cts>;
 				status = "okay";
 			};
 		};
