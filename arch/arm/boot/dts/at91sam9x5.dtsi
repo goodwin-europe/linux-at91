@@ -473,6 +473,9 @@
 				reg = <0xfffff200 0x200>;
 				interrupts = <1 4 7>;
 				pinctrl-names = "default";
+				dmas = <&dma1 1 0x8>,
+				       <&dma1 1 0x209>;
+				dma-names = "tx", "rx";
 				pinctrl-0 = <&pinctrl_dbgu>;
 				status = "disabled";
 			};
@@ -481,6 +484,9 @@
 				compatible = "atmel,at91sam9260-usart";
 				reg = <0xf801c000 0x200>;
 				interrupts = <5 4 5>;
+				dmas = <&dma0 1 0x3>,
+				       <&dma0 1 0x204>;
+				dma-names = "tx", "rx";
 				pinctrl-names = "default";
 				pinctrl-0 = <&pinctrl_usart0>;
 				status = "disabled";
@@ -490,6 +496,9 @@
 				compatible = "atmel,at91sam9260-usart";
 				reg = <0xf8020000 0x200>;
 				interrupts = <6 4 5>;
+				dmas = <&dma0 1 0x5>,
+				       <&dma0 1 0x204>;
+				dma-names = "tx", "rx";
 				pinctrl-names = "default";
 				pinctrl-0 = <&pinctrl_usart1>;
 				status = "disabled";
@@ -499,6 +508,9 @@
 				compatible = "atmel,at91sam9260-usart";
 				reg = <0xf8024000 0x200>;
 				interrupts = <7 4 5>;
+				dmas = <&dma1 1 0xc>,
+				       <&dma1 1 0x20d>;
+				dma-names = "tx", "rx";
 				pinctrl-names = "default";
 				pinctrl-0 = <&pinctrl_usart2>;
 				status = "disabled";
@@ -508,6 +520,9 @@
 				compatible = "atmel,at91sam9260-usart";
 				reg = <0xf8028000 0x200>;
 				interrupts = <8 4 5>;
+				dmas = <&dma1 1 0xe>,
+				       <&dma1 1 0x20f>;
+				dma-names = "tx", "rx";
 				pinctrl-names = "default";
 				pinctrl-0 = <&pinctrl_usart3>;
 				status = "disabled";
