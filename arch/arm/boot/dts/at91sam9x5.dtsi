@@ -473,9 +473,13 @@
 				reg = <0xfffff200 0x200>;
 				interrupts = <1 4 7>;
 				pinctrl-names = "default";
+				/*
+				RX DMA results in kernel panic on boot
+				TX DMA seems to be linked with panic on shutdown
 				dmas = <&dma1 1 0x8>,
 				       <&dma1 1 0x209>;
 				dma-names = "tx", "rx";
+				*/
 				pinctrl-0 = <&pinctrl_dbgu>;
 				status = "disabled";
 			};
