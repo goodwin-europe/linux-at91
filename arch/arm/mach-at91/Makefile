@@ -18,3 +18,5 @@ endif
 ifeq ($(CONFIG_PM_DEBUG),y)
 CFLAGS_pm.o += -DDEBUG
 endif
+
+obj-$(CONFIG_MACH_GOODWIN_EXT_MAC_DT)	+= board-goodwin-extmac.o

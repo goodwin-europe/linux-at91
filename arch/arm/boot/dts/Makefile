@@ -41,6 +41,7 @@ dtb-$(CONFIG_SOC_SAM_V4_V5) += \
 	at91sam9x35ek.dtb \
 	goodwin-gt-9.1.dtb \
 	goodwin-rgw-1.0.dtb \
+	goodwin-tgw-1.5.dtb \
 	goodwin-tgw-2.0.dtb
 
 dtb-$(CONFIG_SOC_SAM_V7) += \
