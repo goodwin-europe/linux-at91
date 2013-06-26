@@ -86,11 +86,11 @@
 				status = "okay";
 			};
 
-			usart4: serial@fffd4000 {
+			uart0: serial@fffd4000 {
 				status = "okay";
 			};
 
-			usart5: serial@fffd8000 {
+			uart1: serial@fffd8000 {
 				status = "okay";
 			};
 
@@ -176,6 +176,7 @@
 		usb0: ohci@00500000 {
 			num-ports = <2>;
 			status = "okay";
+			atmel,vbus-gpio = <&pioB 0 1>;
 		};
 	};
 
