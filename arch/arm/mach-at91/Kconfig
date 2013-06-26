@@ -159,6 +159,14 @@ config MACH_AT91SAM9_DT
 	  Select this if you want to experiment device-tree with
 	  an Atmel Evaluation Kit.
 
+config MACH_GOODWIN_EXT_MAC_DT
+	bool "Goodwin boards with ethernet mac attached to CPU bus"
+	depends on SOC_AT91SAM9
+	select USE_OF
+	help
+	  Select this if you want to experiment device-tree with
+	  an Atmel Evaluation Kit.
+
 config MACH_SAMA5_DT
 	bool "Atmel SAMA5 Evaluation Kits with device-tree support"
 	depends on SOC_SAMA5

@@ -91,6 +91,7 @@ obj-$(CONFIG_MACH_AT91SAM9M10G45EK) += board-sam9m10g45ek.o
 # AT91SAM board with device-tree
 obj-$(CONFIG_MACH_AT91RM9200_DT) += board-dt-rm9200.o
 obj-$(CONFIG_MACH_AT91SAM9_DT) += board-dt-sam9.o
+obj-$(CONFIG_MACH_GOODWIN_EXT_MAC_DT)	+= board-goodwin-extmac.o
 
 # SAMA5 board with device-tree
 obj-$(CONFIG_MACH_SAMA5_DT) += board-dt-sama5.o

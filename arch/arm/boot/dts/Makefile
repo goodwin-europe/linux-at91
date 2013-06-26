@@ -41,6 +41,7 @@ dtb-$(CONFIG_ARCH_AT91)	+= sama5d34ek.dtb
 dtb-$(CONFIG_ARCH_AT91)	+= sama5d35ek.dtb
 
 dtb-$(CONFIG_ARCH_AT91)	+= goodwin-gt-9.1.dtb
+dtb-$(CONFIG_ARCH_AT91)	+= goodwin-tgw-1.5.dtb
 dtb-$(CONFIG_ARCH_AT91)	+= goodwin-rgw-1.0.dtb
 dtb-$(CONFIG_ARCH_AT91)	+= goodwin-tgw-2.0.dtb
 
