@@ -35,6 +35,7 @@
  *  @raw_gyro:		Address of first gyro register.
  *  @raw_accl:		Address of first accel register.
  *  @temperature:	temperature register
+ *  @int_pin_cfg:	Interrupt config / I2C bypass flags.
  *  @int_enable:	Interrupt enable register.
  *  @pwr_mgmt_1:	Controls chip's power state and clock source.
  *  @pwr_mgmt_2:	Controls power state of individual sensors.
@@ -51,6 +52,7 @@ struct inv_mpu6050_reg_map {
 	u8 raw_gyro;
 	u8 raw_accl;
 	u8 temperature;
+	u8 int_pin_cfg;
 	u8 int_enable;
 	u8 pwr_mgmt_1;
 	u8 pwr_mgmt_2;
@@ -131,6 +133,9 @@ struct inv_mpu6050_state {
 #define INV_MPU6050_REG_FIFO_EN             0x23
 #define INV_MPU6050_BIT_ACCEL_OUT                   0x08
 #define INV_MPU6050_BITS_GYRO_OUT                   0x70
+
+#define INV_MPU6050_REG_INT_PIN_CFG         0x37
+#define INV_MPU6050_BIT_I2C_BYPASS_EN       0x2
 
 #define INV_MPU6050_REG_INT_ENABLE          0x38
 #define INV_MPU6050_BIT_DATA_RDY_EN                 0x01
