@@ -751,6 +751,50 @@ static int inv_check_and_setup_chip(struct inv_mpu6050_state *st,
 	return 0;
 }
 
+
+#ifdef CONFIG_OF
+int inv_mpu_of_fill_platform_data(struct device *dev,
+		struct inv_mpu6050_platform_data *pd)
+{
+	struct device_node *np = dev->of_node;
+	struct property *prop;
+	const __be32 *p;
+	u32 u;
+	s32 s;
+	int i;
+
+	if (!np) {
+		dev_warn(dev, "no devicetree data specified");
+		return 0;
+	}
+
+	if (of_get_property(np, "i2c-bypass", NULL) != NULL)
+		pd->i2c_bypass_enable = true;
+
+	i = 0;
+	of_property_for_each_u32(np, "orientation", prop, p, u) {
+		s = (s32) u;
+		if (i >= ARRAY_SIZE(pd->orientation)) {
+			dev_err(dev, "orientation array is too large");
+			return -EINVAL;
+		}
+
+		if ((s != 0) && (s != 1) && (s != -1)) {
+			dev_err(dev, "invalid value in orientation matrix: %d", s);
+			return -EINVAL;
+		}
+		pd->orientation[i] = s;
+		i++;
+	}
+	if (i != ARRAY_SIZE(pd->orientation)) {
+		dev_err(dev, "orientation array is too small");
+		return -EINVAL;
+	}
+
+	return 0;
+}
+#endif
+
 /**
  *  inv_mpu_probe() - probe function.
  *  @client:          i2c client.
@@ -778,8 +822,18 @@ static int inv_mpu_probe(struct i2c_client *client,
 	st->client = client;
 	st->powerup_count = 0;
 	pdata = dev_get_platdata(&client->dev);
-	if (pdata)
+	if (pdata) {
 		st->plat_data = *pdata;
+	} else {
+#ifdef CONFIG_OF
+		result = inv_mpu_of_fill_platform_data(&client->dev, &st->plat_data);
+		if (result)
+			return result;
+#else
+		;
+#endif
+	}
+
 	/* power is turned on inside check chip type*/
 	result = inv_check_and_setup_chip(st, id);
 	if (result)
@@ -908,6 +962,12 @@ static const struct acpi_device_id inv_acpi_match[] = {
 
 MODULE_DEVICE_TABLE(acpi, inv_acpi_match);
 
+static const struct of_device_id mpu6050_of_match[] = {
+	{.compatible = "invensense,mpu6050"},
+	{}
+};
+MODULE_DEVICE_TABLE(of, mpu6050_of_match);
+
 static struct i2c_driver inv_mpu_driver = {
 	.probe		=	inv_mpu_probe,
 	.remove		=	inv_mpu_remove,
@@ -917,6 +977,7 @@ static struct i2c_driver inv_mpu_driver = {
 		.name	=	"inv-mpu6050",
 		.pm     =       INV_MPU6050_PMOPS,
 		.acpi_match_table = ACPI_PTR(inv_acpi_match),
+		.of_match_table = mpu6050_of_match,
 	},
 };
 

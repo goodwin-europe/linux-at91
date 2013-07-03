@@ -56,7 +56,6 @@ struct inv_mpu6050_reg_map {
 	u8 int_enable;
 	u8 pwr_mgmt_1;
 	u8 pwr_mgmt_2;
-	u8 int_pin_cfg;
 };
 
 /*device enum */
