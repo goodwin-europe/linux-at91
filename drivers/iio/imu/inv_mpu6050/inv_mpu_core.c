@@ -658,6 +658,50 @@ static int inv_check_and_setup_chip(struct inv_mpu6050_state *st,
 	return 0;
 }
 
+
+#ifdef CONFIG_OF
+int inv_mpu_of_fill_platform_data(struct device *dev,
+		struct inv_mpu6050_platform_data *pd)
+{
+	struct device_node *np = dev->of_node;
+	struct property *prop;
+	const __be32 *p;
+	u32 u;
+	s32 s;
+	int i;
+
+	if (!np) {
+		dev_err(dev, "device node not found\n");
+		return -EINVAL;
+	}
+
+	if (of_get_property(np, "i2c-bypass", NULL) != NULL)
+		pd->i2c_bypass_enable = true;
+
+	i = 0;
+	of_property_for_each_u32(np, "orientation", prop, p, u) {
+		s = (s32) u;
+		if (i >= ARRAY_SIZE(pd->orientation)) {
+			dev_err(dev, "orientation array is too large");
+			return -EINVAL;
+		}
+
+		if ((s != 0) && (s != 1) && (s != -1)) {
+			dev_err(dev, "invalid value in orientation matrix: %d", s);
+			return -EINVAL;
+		}
+		pd->orientation[i] = s;
+		i++;
+	}
+	if (i != ARRAY_SIZE(pd->orientation)) {
+		dev_err(dev, "orientation array is too small");
+		return -EINVAL;
+	}
+
+	return 0;
+}
+#endif
+
 /**
  *  inv_mpu_probe() - probe function.
  *  @client:          i2c client.
@@ -685,8 +729,21 @@ static int inv_mpu_probe(struct i2c_client *client,
 	}
 	st = iio_priv(indio_dev);
 	st->client = client;
-	st->plat_data = *(struct inv_mpu6050_platform_data
-				*)dev_get_platdata(&client->dev);
+	if (dev_get_platdata(&client->dev)) {
+		st->plat_data = *(struct inv_mpu6050_platform_data *)
+		        dev_get_platdata(&client->dev);
+	} else {
+#ifdef CONFIG_OF
+		result = inv_mpu_of_fill_platform_data(&client->dev, &st->plat_data);
+		if (result)
+			goto out_free;
+#else
+		dev_err(&client->dev, "No platform data specified.\n");
+		result = -EINVAL;
+		goto out_free;
+#endif
+	}
+
 	/* power is turned on inside check chip type*/
 	result = inv_check_and_setup_chip(st, id);
 	if (result)
@@ -787,6 +844,12 @@ static const struct i2c_device_id inv_mpu_id[] = {
 
 MODULE_DEVICE_TABLE(i2c, inv_mpu_id);
 
+static const struct of_device_id mpu6050_of_match[] = {
+	{.compatible = "invensense,mpu6050"},
+	{}
+};
+MODULE_DEVICE_TABLE(of, mpu6050_of_match);
+
 static struct i2c_driver inv_mpu_driver = {
 	.probe		=	inv_mpu_probe,
 	.remove		=	inv_mpu_remove,
@@ -795,6 +858,7 @@ static struct i2c_driver inv_mpu_driver = {
 		.owner	=	THIS_MODULE,
 		.name	=	"inv-mpu6050",
 		.pm     =       INV_MPU6050_PMOPS,
+		.of_match_table = mpu6050_of_match,
 	},
 };
 
