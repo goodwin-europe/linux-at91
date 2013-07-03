@@ -49,6 +49,7 @@ static const struct inv_mpu6050_reg_map reg_set_6050 = {
 	.raw_gyro               = INV_MPU6050_REG_RAW_GYRO,
 	.raw_accl               = INV_MPU6050_REG_RAW_ACCEL,
 	.temperature            = INV_MPU6050_REG_TEMPERATURE,
+	.int_pin_cfg            = INV_MPU6050_REG_INT_PIN_CFG,
 	.int_enable             = INV_MPU6050_REG_INT_ENABLE,
 	.pwr_mgmt_1             = INV_MPU6050_REG_PWR_MGMT_1,
 	.pwr_mgmt_2             = INV_MPU6050_REG_PWR_MGMT_2,
@@ -644,6 +645,15 @@ static int inv_check_and_setup_chip(struct inv_mpu6050_state *st,
 					INV_MPU6050_BIT_PWR_GYRO_STBY);
 	if (result)
 		return result;
+
+	if (st->plat_data.i2c_bypass_enable) {
+		/* USER_CTRL I2C_MST_EN bit is already set to 0 after reset
+		   and it's not touched in the rest of code */
+		result = inv_mpu6050_write_reg(st, st->reg->int_pin_cfg,
+					    INV_MPU6050_BIT_I2C_BYPASS_EN);
+		if (result)
+			return result;
+	}
 
 	return 0;
 }

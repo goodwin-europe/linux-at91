@@ -23,9 +23,12 @@
  * that are applied to the data to rotate from the mounting orientation to the
  * platform orientation.  The values must be one of 0, 1, or -1 and each row and
  * column should have exactly 1 non-zero value.
+ *
+ * @i2c_bypass_enable: connect primary and auxiliary I2C ports together.
  */
 struct inv_mpu6050_platform_data {
 	__s8 orientation[9];
+	int i2c_bypass_enable;
 };
 
 #endif
