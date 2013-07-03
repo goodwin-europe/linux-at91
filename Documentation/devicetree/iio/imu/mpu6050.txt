@@ -1,0 +1,28 @@
+* InvenSense MPU 6050 MEMS (gyro + accelerometer)
+
+This driver also works with MEMS 9150 device.
+
+Required properties:
+- compatible: Should be "invensense,mpu6050"
+- reg: i2c address
+- interrupts: interrupt description
+- orientation: array of 9 values that specifies 3x3 rotation matrix that is
+               applied to convert data from chip orientation to device
+			   orientation. Permitted values are -1, 0, 1.
+
+Optional properties:
+- i2c-bypass: enable I2C bypass mode. When this option is defined, auxiliary
+              I2C interface is connected to main I2C interface.
+
+Examples:
+
+	mpu6050: mpu6050@68 {
+		compatible = "invensense,mpu6050";
+		reg = <0x68>;
+		interrupts = <29 1>;
+		orientation = <1   0   0
+		               0 (-1)  0
+		               0   0 (-1)>;
+		i2c-bypass;
+	};
+
