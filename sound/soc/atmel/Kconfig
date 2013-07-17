@@ -52,3 +52,14 @@ config SND_AT91_SOC_SAMA5D3_WM8904
 	help
 	  Say Y if you want to add support for audio SoC on an
 	  SAMA5D3-EK board which uses WM8904 audio codec.
+
+config SND_AT91_SOC_SAMA5D3_SGTL5000
+	tristate "SoC Audio support for SGTL5000 add-on to SAMA5D3-EK board"
+	depends on ATMEL_SSC && SND_ATMEL_SOC
+	select SND_ATMEL_SOC_DMA
+	select SND_ATMEL_SOC_SSC
+	select SND_SOC_SGTL5000
+	select SND_SOC_DMAENGINE_PCM
+	help
+	  Say Y if you want to add support for audio SoC on an
+	  SAMA5D3-EK board which uses WM8904 audio codec.
