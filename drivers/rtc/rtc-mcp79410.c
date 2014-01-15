@@ -231,13 +231,10 @@ static const struct rtc_class_ops mcp79410_rtc_ops = {
 	.ioctl      = mcp79410_rtc_ioctl,
 };
 
-static DEVICE_ATTR(id, S_IRUGO, NULL, NULL);
-
 
 static int
 mcp79410_probe(struct i2c_client *client, const struct i2c_device_id *id)
 {
-	int rc = 0;
 	struct rtc_device *rtc = NULL;
 
 	if (!i2c_check_functionality(client->adapter, I2C_FUNC_I2C))
@@ -248,15 +245,7 @@ mcp79410_probe(struct i2c_client *client, const struct i2c_device_id *id)
 	if (IS_ERR(rtc))
 		return PTR_ERR(rtc);
 	i2c_set_clientdata(client, rtc);
-	// Register sysfs hooks
-	rc = device_create_file(&client->dev, &dev_attr_id);
-	if (rc < 0)
-		goto exit_unregister;
 	return 0;
-
-exit_unregister:
-	rtc_device_unregister(rtc);
-	return rc;
 }
 
 static int
@@ -264,7 +253,6 @@ mcp79410_remove(struct i2c_client *client)
 {
 	struct rtc_device *rtc = i2c_get_clientdata(client);
 	rtc_device_unregister(rtc);
-	device_remove_file(&client->dev, &dev_attr_id);
 	return 0;
 }
 
