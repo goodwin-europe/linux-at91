@@ -12,7 +12,7 @@
  * Licensed under GPLv2 or later.
  */
 
-/include/ "at91sam9x25.dtsi"
+#include "at91sam9x25.dtsi"
 
 / {
 	memory {
