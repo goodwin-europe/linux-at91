@@ -885,6 +885,9 @@ static void atmel_rx_request_dma(struct atmel_uart_port *atmel_port)
 	ring = &atmel_port->rx_ring;
 	port = &(atmel_port->uart);
 
+	ring->head = 0;
+	ring->tail = 0;
+
 	dma_cap_zero(mask);
 	dma_cap_set(DMA_CYCLIC, mask);
 
