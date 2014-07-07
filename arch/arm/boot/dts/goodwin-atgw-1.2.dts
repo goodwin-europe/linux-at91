@@ -1,0 +1,47 @@
+/*
+ * goodwin-tgw-2.0.dts - Device Tree file for Goodwin TGW 2.0 board
+ *
+ *  Copyright (C) 2013 Goodwin,
+ *                2013 Alexander Morozov <linux@meltdown.ru>
+ *
+ * Licensed under GPLv2 or later.
+ */
+
+/dts-v1/;
+#include "goodwin-gw-9x25.dtsi"
+
+/ {
+	model = "Goodwin ATGW 1.2";
+	compatible = "goodwin,atgw-1.2", "atmel,at91sam9x5", "atmel,at91sam9";
+
+	leds {
+		pd20 {
+			label = "pd18";
+			gpios = <&pioD 20 1>;
+		};
+	};
+
+	max6369 {
+		/* WDT can be disabled by setting switch 1:3 to off */
+		compatible = "generic,gpio-wdt";
+		gpios = <&pioC 28 0>;
+		ping-sec = <5>;
+		timeout-sec = <60>;
+		status = "okay";
+	};
+
+	ahb {
+		apb {
+			macb1: ethernet@f8030000 {
+			       status = "disabled";
+			};
+
+			/* AMBE codec */
+			usart3: serial@f8028000 {
+				pinctrl-0 = <&pinctrl_usart3 &pinctrl_usart3_cts>;
+				status = "okay";
+			};
+		};
+	};
+};
+
