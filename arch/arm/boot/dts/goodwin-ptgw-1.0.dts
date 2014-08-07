@@ -1,0 +1,300 @@
+/*
+ * goodwin-ci5-3e1.dts - Device Tree file for Goodwin CI5-3E1 board
+ *
+ *  Copyright (C) 2013 Atmel,
+ *                2013 Ludovic Desroches <ludovic.desroches@atmel.com>
+ *
+ * Licensed under GPLv2 or later.
+ */
+/dts-v1/;
+#include "sama5d35.dtsi"
+
+/ {
+	model = "Goodwin CI5-3E1";
+	compatible = "atmel,sama5d35ek", "atmel,sama5d3xmb", "atmel,sama5d3xcm", "atmel,sama5d3", "atmel,sama5";
+
+	memory {
+		reg = <0x20000000 0x20000000>;
+	};
+
+	slow_xtal {
+		clock-frequency = <32768>;
+	};
+
+	main_xtal {
+		clock-frequency = <12000000>;
+	};
+
+	leds {
+		compatible = "gpio-leds";
+
+		pe24 {
+			label = "vd2";
+			gpios = <&pioE 24 0>;
+		};
+
+		pe25 {
+			label = "vd1"; /* conflicts with 1wire */
+			gpios = <&pioE 25 1>;
+			linux,default-trigger = "heartbeat";
+		};
+
+	};
+
+	max6369 {
+		/* WDT can be disabled by setting switch 1:4 to off */
+		compatible = "generic,gpio-wdt";
+		gpios = <&pioE 6 0>;
+		ping-sec = <5>;
+		timeout-sec = <60>;
+	};
+
+	1wire0 {
+		compatible = "w1-gpio";
+		gpios = <&pioE 25 GPIO_ACTIVE_HIGH>; /* conflicts with led VD1 */
+		linux,open-drain;
+		pinctrl-names = "default";
+		pinctrl-0 = <&pinctrl_1wire0>;
+		status = "okay";
+	};
+
+	regulators {
+	    compatible = "simple-bus";
+	    #address-cells = <1>;
+	    #size-cells = <0>;
+	    vmmc0: vmmc0-reg@0 {
+		    compatible = "regulator-fixed";
+		    reg = <0>;
+		    regulator-name = "vmmc0";
+		    regulator-min-microvolt = <3300000>;
+		    regulator-max-microvolt = <3300000>;
+		    gpio = <&pioB 14 0>;
+		    regulator-boot-on;
+		    status = "okay";
+	    };
+
+	    vmmc1: vmmc1-reg@1 {
+		    compatible = "regulator-fixed";
+		    reg = <1>;
+		    regulator-name = "vmmc1";
+		    regulator-min-microvolt = <3300000>;
+		    regulator-max-microvolt = <3300000>;
+		    gpio = <&pioB 12 0>;
+		    regulator-boot-on;
+		    status = "okay";
+	    };
+
+	    vmmc2: vmmc2-reg@2 {
+		    compatible = "regulator-fixed";
+		    reg = <2>;
+		    regulator-name = "vmmc2";
+		    regulator-min-microvolt = <3300000>;
+		    regulator-max-microvolt = <3300000>;
+		    regulator-boot-on;
+		    status = "okay";
+	    };
+
+	    vdd_codec: vdd_codec-reg@3 {
+		    compatible = "regulator-fixed";
+		    reg = <2>;
+		    regulator-name = "vdd_codec";
+		    regulator-min-microvolt = <3300000>;
+		    regulator-max-microvolt = <3300000>;
+		    regulator-boot-on;
+		    status = "okay";
+	    };
+
+	    /* Commented out for now as there are no kernel drivers that need those
+	       regulators, and they are too difficult to access from userspace.
+	    vdd_5v0: regulator@10 {
+		    compatible = "regulator-fixed";
+		    reg = <10>;
+		    regulator-name = "vdd_5v0";
+		    regulator-min-microvolt = <5000000>;
+		    regulator-max-microvolt = <5000000>;
+		    gpio = <&pioE 8 0>;
+		    enable-active-high;
+
+		    status = "okay";
+	    };
+
+	    vdd_3v7: regulator@11 {
+		    compatible = "regulator-fixed";
+		    reg = <11>;
+		    regulator-name = "vdd_3v7";
+		    regulator-min-microvolt = <5000000>;
+		    regulator-max-microvolt = <5000000>;
+		    gpio = <&pioE 10 0>;
+		    enable-active-high;
+
+		    status = "okay";
+	    };
+	    */
+	};
+
+	ahb {
+		nand0: nand@60000000 {
+			nand-bus-width = <8>;
+			nand-ecc-mode = "hw";
+			atmel,has-pmecc;
+			atmel,pmecc-cap = <4>;
+			atmel,pmecc-sector-size = <512>;
+			status = "ok";
+		};
+
+		apb {
+			dbgu: serial@ffffee00 {
+				status = "okay";
+			};
+
+
+			/* internal MMC */
+			mmc0: mmc@f0000000 {
+				status = "okay";
+				vmmc-supply = <&vmmc0>;
+				slot@0 {
+					reg = <0>;
+					bus-width = <8>;
+				};
+			};
+
+			/* external slot */
+			mmc1: mmc@f8000000 {
+				status = "okay";
+				vmmc-supply = <&vmmc1>;
+				slot@0 {
+					reg = <0>;
+					bus-width = <4>;
+				};
+			};
+
+			/* ath6kl */
+			mmc2: mmc@f8004000 {
+				status = "okay";
+				vmmc-supply = <&vmmc2>;
+				slot@0 {
+					reg = <0>;
+					bus-width = <4>;
+				};
+			};
+
+			spi0: spi@f0004000 {
+				cs-gpios = <&pioD 13 0>;
+				status = "okay";
+
+				m25p80@0 {
+					/* Close switch 1:2 to enable */
+					compatible = "atmel,at25df321a";
+					spi-max-frequency = <50000000>;
+					reg = <0>;
+				};
+			};
+
+			spi1: spi@f8008000 {
+				cs-gpios = <&pioC 25 0>;
+				status = "okay";
+
+				mcp23s17@0 {
+					compatible = "mcp,mcp23s17";
+					gpio-controller;
+					#gpio-cells = <2>;
+					mcp,spi-present-mask = <0x01>;
+					reg = <0>;
+					spi-max-frequency = <1000000>;
+					status = "okay";
+				};
+			};
+
+			/* Telit UL865 */
+			usart0: serial@f001c000 {
+				status = "okay";
+			};
+
+			/* AMBE codec */
+			usart1: serial@f0020000 {
+				pinctrl-0 = <&pinctrl_usart1 &pinctrl_usart1_cts>;
+				status = "okay";
+			};
+
+			i2c1: i2c@f0018000 {
+				status = "okay";
+
+				mcp79410: rtc@6f {
+					compatible = "microchip,mcp79410";
+					reg = <0x6f>;
+					status = "okay";
+				};
+
+				mpu6050: mpu6050@d0 {
+					compatible = "invensense,mpu6050";
+					reg = <0x68>;
+
+					interrupt-parent = <&pioC>;
+					interrupts = <29 0x0>;
+
+					orientation = <1 0 0
+						       0 1 0
+						       0 0 1>;
+					i2c-bypass;
+					status = "okay";
+				};
+				
+				ak8975: ak8975@0c {
+					compatible = "ak,ak8975";
+					reg = <0xc>;
+					/* interrupt-parent = <&gpio>;
+					interrupts = <109 0x04>; */
+					status = "okay";
+				};
+
+			};
+
+			macb0: ethernet@f0028000 {
+				phy-mode = "rgmii";
+				status = "okay";
+			};
+
+			macb1: ethernet@f802c000 {
+				phy-mode = "rmii";
+				status = "okay";
+			};
+
+			pinctrl@fffff200 {
+				board {
+					pinctrl_1wire0: 1wire0-0 {
+						atmel,pins = <AT91_PIOE 25 AT91_PERIPH_GPIO AT91_PINCTRL_MULTI_DRIVE>;
+					};
+					pinctrl_usba_vbus: usba_vbus {
+						atmel,pins =
+							<AT91_PIOD 29 AT91_PERIPH_GPIO AT91_PINCTRL_DEGLITCH>; /* PD29 GPIO with deglitch */
+					};
+				};
+				usart1 {
+					pinctrl_usart1_cts: usart1_cts-0 {
+						atmel,pins =
+							<AT91_PIOB 26 AT91_PERIPH_A AT91_PINCTRL_NONE>;
+					};
+				};
+			};
+		};
+
+		usb0: gadget@00500000 {
+			atmel,vbus-gpio = <&pioD 25 GPIO_ACTIVE_LOW>;
+			pinctrl-names = "default";
+			pinctrl-0 = <&pinctrl_usba_vbus>;
+			status = "okay";
+		};
+
+		usb1: ohci@00600000 {
+			num-ports = <3>;
+			*atmel,vbus-gpio = <&pioD 26 GPIO_ACTIVE_LOW
+					    &pioD 27 GPIO_ACTIVE_LOW>;
+			status = "okay";
+		};
+
+		usb2: ehci@00700000 {
+			status = "okay";
+		};
+
+	};
+};
