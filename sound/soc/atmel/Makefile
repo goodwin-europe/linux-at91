@@ -14,8 +14,12 @@ snd-soc-sam9g20-wm8731-objs := sam9g20_wm8731.o
 snd-atmel-soc-wm8904-objs := atmel_wm8904.o
 snd-soc-sam9x5-wm8731-objs := sam9x5_wm8731.o
 snd-atmel-soc-classd-objs := atmel-classd.o
+snd-soc-sama5d3-aic32x4-objs := sama5d3_aic32x4.o
 
 obj-$(CONFIG_SND_AT91_SOC_SAM9G20_WM8731) += snd-soc-sam9g20-wm8731.o
 obj-$(CONFIG_SND_ATMEL_SOC_WM8904) += snd-atmel-soc-wm8904.o
 obj-$(CONFIG_SND_AT91_SOC_SAM9X5_WM8731) += snd-soc-sam9x5-wm8731.o
 obj-$(CONFIG_SND_ATMEL_SOC_CLASSD) += snd-atmel-soc-classd.o
+obj-$(CONFIG_SND_AT91_SOC_SAMA5D3_AIC32X4) += snd-soc-sama5d3-aic32x4.o
+
+obj-$(CONFIG_SND_AT91_SOC_AFEB9260) += snd-soc-afeb9260.o

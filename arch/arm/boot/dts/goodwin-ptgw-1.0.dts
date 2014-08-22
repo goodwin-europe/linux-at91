@@ -178,6 +178,11 @@
 				};
 			};
 
+			ssc0: ssc@f0008000 {
+				atmel,clk-from-rk-pin;
+				status = "ok";
+			};
+
 			spi0: spi@f0004000 {
 				cs-gpios = <&pioD 13 0>;
 				status = "okay";
@@ -247,6 +252,16 @@
 					status = "okay";
 				};
 
+				aic32x4: aic32x4@18 {
+				        compatible = "ti,tlv320aic32x4";
+					reg = <0x18>;
+					clocks = <&pck0>; /* pck0 */
+					clock-names = "mclk";
+					iov-supply = <&vdd_codec>;
+					ldoin-supply = <&vdd_codec>;
+					/* dv-supply = <&vdd_codec_core>;
+					av-supply = <&vdd_codec_core>; */
+				};
 			};
 
 			macb0: ethernet@f0028000 {
@@ -264,9 +279,15 @@
 					pinctrl_1wire0: 1wire0-0 {
 						atmel,pins = <AT91_PIOE 25 AT91_PERIPH_GPIO AT91_PINCTRL_MULTI_DRIVE>;
 					};
+
 					pinctrl_usba_vbus: usba_vbus {
 						atmel,pins =
 							<AT91_PIOD 29 AT91_PERIPH_GPIO AT91_PINCTRL_DEGLITCH>; /* PD29 GPIO with deglitch */
+					};
+
+					pinctrl_pck0_as_audio_mck: pck0_as_audio_mck {
+						atmel,pins =
+							<AT91_PIOD 30 AT91_PERIPH_B AT91_PINCTRL_NONE>;	/* PD30 periph B */
 					};
 				};
 				usart1 {
@@ -296,5 +317,26 @@
 			status = "okay";
 		};
 
+	};
+
+	sound {
+		compatible = "atmel,sama5d3-aic32x4";
+		pinctrl-names = "default";
+		pinctrl-0 = <&pinctrl_pck0_as_audio_mck>;
+
+		atmel,model = "AIC32x4 @ SAMA5D3";
+		atmel,audio-routing =
+		    "IN1_R", "Mic Bias",
+		    "IN2_R", "Mic Bias",
+		    "IN1_L", "Mic Bias",
+		    "IN2_L", "Mic Bias";
+
+		atmel,ssc-controller = <&ssc0>;
+		atmel,audio-codec = <&aic32x4>;
+
+		clocks = <&prog0 &pck0 &main>;
+		clock-names = "prog", "pck", "main";
+
+		status = "ok";
 	};
 };

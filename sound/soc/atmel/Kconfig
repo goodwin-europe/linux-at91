@@ -74,3 +74,14 @@ config SND_ATMEL_SOC_I2S
 	  Say Y or M if you want to add support for codecs attached to
 	  the Atmel I2S interface. You will also need
 	  to select the audio interfaces to support below.
+
+config SND_AT91_SOC_SAMA5D3_AIC32X4
+	tristate "SoC audio support for TLV320AIC32X4 based SAMA5 boards"
+	depends on ATMEL_SSC && SND_ATMEL_SOC
+	select SND_ATMEL_SOC_DMA
+	select SND_ATMEL_SOC_SSC
+	select SND_SOC_TLV320AIC32X4
+	select SND_SOC_DMAENGINE_PCM
+	help
+	  Say Y if you want to add support for SoC audio on AT91SAMA5 based
+	  boards with TLV320AIC32X4 codec.
