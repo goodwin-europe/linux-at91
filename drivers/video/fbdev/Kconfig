@@ -2434,6 +2434,19 @@ config FB_HYPERV
 	help
 	  This framebuffer driver supports Microsoft Hyper-V Synthetic Video.
 
+config FB_FT800
+	tristate "FTDI FT800 driver"
+	depends on FB
+	depends on OF
+	select FB_SYS_FOPS
+	select FB_SYS_FILLRECT
+	select FB_SYS_COPYAREA
+	select FB_SYS_IMAGEBLIT
+	select VIDEOMODE_HELPERS
+	default n
+	---help---
+	  This driver implements support for FTDI FT800 EVE chip.
+
 config FB_SIMPLE
 	bool "Simple framebuffer support"
 	depends on (FB = y)

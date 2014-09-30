@@ -183,6 +183,12 @@
 				status = "ok";
 			};
 
+			/* FIXME: sacrifice 3des DMAs since channels are needed for
+			   other modules */
+			tdes@f803c000 {
+				dmas = <>;
+			};
+
 			spi0: spi@f0004000 {
 				cs-gpios = <&pioD 13 0>;
 				status = "okay";
@@ -196,7 +202,11 @@
 			};
 
 			spi1: spi@f8008000 {
-				cs-gpios = <&pioC 25 0>;
+				cs-gpios = <&pioC 28 0>;
+
+				cs-gpios = <&pioC 25 0
+					    &pioC 28 0>;
+
 				status = "okay";
 
 				mcp23s17@0 {
@@ -208,6 +218,22 @@
 					spi-max-frequency = <1000000>;
 					status = "okay";
 				};
+
+				ft800: ft800@1 {
+					compatible = "ftdi,ft800";
+					reg = <1>;
+					size = <320 240>;
+					spi-max-frequency = <30000000>;
+					reset-gpios = <&pioC 31 GPIO_ACTIVE_LOW>;
+					status = "okay";
+				};
+
+				/* spidev1.1@1 {
+					compatible = "spidev";
+					reg = <1>;
+					spi-max-frequency = <50000000>;
+					status = "okay";
+				}; */
 			};
 
 			/* Telit UL865 */
