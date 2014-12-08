@@ -77,6 +77,7 @@ excito	Excito
 fcs	Fairchild Semiconductor
 firefly	Firefly
 fsl	Freescale Semiconductor
+ftdi	Future Technology Devices International Ltd.
 GEFanuc	GE Fanuc Intelligent Platforms Embedded Systems, Inc.
 gef	GE Fanuc Intelligent Platforms Embedded Systems, Inc.
 geniatech	Geniatech, Inc.

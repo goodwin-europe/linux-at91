@@ -1,0 +1,86 @@
+* FTDI FT800 framebuffer interface with touchscreen support
+
+FT800 is a LCD controller with advanced 2D acceleration capabilities and
+resistive touch screen interface. It can be attached to a host system via
+SPI or I2C interface.
+
+This driver supports simple framebuffer mode without acceleration. Since most
+programs expect mmap() interface, some system RAM is allocated and all draw
+calls operate on it exclusively. This framebuffer area is continuously
+transferred to internal memory of FT800. FT800 graphical processor is
+configured to treat this part of memory as RGB565 image and output it to
+LCD after some simple transformations.
+
+This design and current driver implementation lead to following points that
+should be taken into account:
+
+1. SPI bus is quite heavily loaded. When device is opened in mmap mode, driver
+has no efficient way to determine if framebuffer memory was changed or not. So
+it tries to update as often as it can, leaving only small gaps for other
+transfers on SPI bus. Driver could be redesigned to use MMU and page tables
+to detect changed regions of memory, but it's not currently implemented.
+
+2. Rotations and flips are done by FT800 graphical processor and are basically
+free.
+
+Required properties:
+- compatible: Should be "ftdi,ft800".
+- reg: address on SPI bus.
+- reset-gpios: array with one GPIO used to reset the chip.
+- display-timings : Refer to binding doc display-timing.txt for details.
+  clock-frequency may assume only discrete set of values, {48000000/div},
+  where div = 1...255. Specified value will be rounded down to closest
+  possible.
+
+Optional properties:
+- spi-max-frequency: SPI bus frequency in HZ. 30000000 is upper limit specified
+  in datasheet, values higher than that will be clipped. Generally higher the
+  frequency, more FPS you will get,
+  will be clipped.
+- rotation: values from 0 to 3, corresponding to 0, 90, 180 and 270 degrees
+  clockwise [1].
+- flip-x: if present, flip framebuffers x-axis after it's rotated.
+- flip-y: if present, flip framebuffers y-axis after it's rotated.
+- touchscreen-rotation: same as `rotation`, acts on touchscreen.
+- touchscreen-flip-x: same as `flip-x`, acts on touchscreen.
+- touchscreen-flip-y: same as `flip-y`, acts on touchscreen.
+
+[1] Coordinate system will be rotated clockwise if axes are directed as in
+following picture. If x and y axes are swapped, rotation will be
+counterclockwise.
+ +---------> (x)
+ |
+ |
+ |
+ V (y)
+
+lcdif@80030000 {
+	compatible = "fsl,imx28-lcdif";
+	reg = <0x80030000 2000>;
+	reset-gpios = <&pioC 31 GPIO_ACTIVE_LOW>;
+
+	spi-max-frequency = <25000000>;
+
+	rotation = <1>;
+	flip-x;
+	
+	touchscreen-rotation = <1>;
+	touchscreen-flip-x;
+	
+	display-timings {
+		native-mode = <&timing0>;
+		timing0: timing0 {
+			clock-frequency = <6000000>;
+
+			hsync-len = <10>;
+			hfront-porch = <60>;
+			hactive = <320>;
+			hback-porch = <0>;
+
+			vsync-len = <1>;
+			vfront-porch = <13>;
+			vactive = <240>;
+			vback-porch = <0>;
+		};
+	};
+};
