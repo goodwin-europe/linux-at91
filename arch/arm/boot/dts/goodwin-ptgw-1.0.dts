@@ -222,10 +222,40 @@
 				ft800: ft800@1 {
 					compatible = "ftdi,ft800";
 					reg = <1>;
-					size = <320 240>;
-					spi-max-frequency = <30000000>;
+					spi-max-frequency = <25000000>;
 					reset-gpios = <&pioC 31 GPIO_ACTIVE_LOW>;
+
+					hsync = <10 70>;
+					vsync = <1 14>;
+					lcd-size = <320 240>;
+
+					rotation = <1>;
+					/* flip-x; */
+					/* flip-y; */
+
+					touchscreen-enable;
+					touchscreen-rotation = <1>;
+					touchscreen-flip-x;
+
 					status = "okay";
+
+					display-timings {
+						native-mode = <&timing0>;
+						timing0: 320x240 {
+							clock-frequency = <6000000>;
+							hactive = <320>;
+							vactive = <320>;
+
+							hsync-len = <10>;
+							hfront-porch = <60>;
+							hback-porch = <0>;
+
+							vsync-len = <1>;
+							vfront-porch = <13>;
+							vback-porch = <0>;
+						};
+					};
+
 				};
 
 				/* spidev1.1@1 {
@@ -246,6 +276,15 @@
 				pinctrl-0 = <&pinctrl_usart1 &pinctrl_usart1_cts>;
 				status = "okay";
 			};
+
+			sha@f8034000 {
+				dmas = <>;
+			};
+
+			aes@f8038000 {
+				dmas = <>;
+			};
+
 
 			i2c1: i2c@f0018000 {
 				status = "okay";
