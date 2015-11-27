@@ -44,7 +44,8 @@ dtb-$(CONFIG_SOC_SAM_V4_V5) += \
 	goodwin-tgw-1.5.dtb \
 	goodwin-tgw-2.0.dtb \
         goodwin-ptgw-1.0.dtb \
-	goodwin-atgw-1.2.dtb
+	goodwin-atgw-1.2.dtb \
+	goodwin-mtgw-1.0.dtb
 
 dtb-$(CONFIG_SOC_SAM_V7) += \
 	at91-kizbox2.dtb \

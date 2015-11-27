@@ -1,0 +1,120 @@
+/*
+ * goodwin-ci5-3e1.dts - Device Tree file for Goodwin CI5-3E1 board
+ *
+ *  Copyright (C) 2013 Atmel,
+ *                2013 Ludovic Desroches <ludovic.desroches@atmel.com>
+ *
+ * Licensed under GPLv2 or later.
+ */
+/dts-v1/;
+#include "sama5d35.dtsi"
+
+/ {
+	model = "Goodwin MTGW";
+	compatible = "atmel,sama5d35ek", "atmel,sama5d3xmb", "atmel,sama5d3xcm", "atmel,sama5d3", "atmel,sama5";
+
+	memory {
+		reg = <0x20000000 0x20000000>;
+	};
+
+	slow_xtal {
+		clock-frequency = <32768>;
+	};
+
+	main_xtal {
+		clock-frequency = <12000000>;
+	};
+
+	leds {
+		compatible = "gpio-leds";
+
+		pe24 {
+			label = "vd2";
+			gpios = <&pioE 24 0>;
+		};
+
+		pe25 {
+			label = "vd1"; /* conflicts with 1wire */
+			gpios = <&pioE 25 1>;
+			linux,default-trigger = "heartbeat";
+		};
+
+	};
+
+	regulators {
+	    compatible = "simple-bus";
+	    #address-cells = <1>;
+	    #size-cells = <0>;
+	    vmmc1: vmmc1-reg@1 {
+		    compatible = "regulator-fixed";
+		    reg = <1>;
+		    regulator-name = "vmmc1";
+		    regulator-min-microvolt = <3300000>;
+		    regulator-max-microvolt = <3300000>;
+		    gpio = <&pioB 12 0>;
+		    regulator-boot-on;
+		    status = "okay";
+	    };
+
+	};
+
+	ahb {
+		nand0: nand@60000000 {
+			nand-bus-width = <8>;
+			nand-ecc-mode = "hw";
+			atmel,has-pmecc;
+			atmel,pmecc-cap = <4>;
+			atmel,pmecc-sector-size = <512>;
+			status = "ok";
+		};
+
+		apb {
+			dbgu: serial@ffffee00 {
+				status = "okay";
+			};
+
+
+			/* external slot */
+			mmc1: mmc@f8000000 {
+				status = "okay";
+				vmmc-supply = <&vmmc1>;
+				slot@0 {
+					reg = <0>;
+					bus-width = <4>;
+				};
+			};
+
+
+			/* DB-9 out, DTS/DTR/DSR/DCD should be set from userspace */
+			usart0: serial@f001c000 {
+				pinctrl-0 = <&pinctrl_usart0 &pinctrl_usart0_rts_cts>;
+				status = "okay";
+			};
+
+			/* ESP-03 */
+			usart1: serial@f0020000 {
+				status = "okay";
+			};
+
+			macb1: ethernet@f802c000 {
+				phy-mode = "rmii";
+				status = "okay";
+			};
+		};
+
+		usb0: gadget@00500000 {
+			pinctrl-names = "default";
+			status = "okay";
+		};
+
+		usb1: ohci@00600000 {
+			num-ports = <3>;
+			status = "okay";
+		};
+
+		usb2: ehci@00700000 {
+			status = "okay";
+		};
+
+	};
+};
